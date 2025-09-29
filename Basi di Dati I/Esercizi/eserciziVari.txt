@@ -1,0 +1,198 @@
+1.
+
+coppie di DOI in cui le parole chiave di D2 sono tutte quante anche di D1
+seleziono tutti i DOI che hanno almeno una parola chiave associata a D2 ma non a D1
+li sottraggo a tutti i DOI
+
+K1 (DOI1, Parola) = Keywords
+K2 (DOI2, Parola) = Keywords
+Matching = K1 * K2
+AllCount (DOI, Tot1) = DOI Ƒ COUNT Parola (Keywords)
+MatchingCount (DOI1, DOI2, Tot2) = DOI1, DOI2 Ƒ COUNT Parola (Matching)
+RES = PR DOI1, DOI2 (SL Tot1=Tot2 (AllCount JN DOI=DOI2 MatchingCount))
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION postSimili(inputPost Post.IdPost%TYPE, k INTEGER)
+RETURNS TEXT AS $$
+DECLARE
+  testoPost Post.Testo%TYPE;
+  curPost CURSOR FOR SELECT IdPost, Testo
+                     FROM Post
+                     WHERE IdPost <> inputPost
+  thisPost RECORD;
+  keys CURSOR FOR SELECT *
+                  FROM Key
+  thisKey Key%ROWTYPE;
+  keywordsInput Key.parola%TYPE[] := ARRAY[];
+  keywordsInputCount INTEGER = 0;
+  count INTEGER;
+  stringa TEXT;
+  risultati RECORD;
+BEGIN
+  OPEN curPost;
+  OPEN keys;
+  SELECT Testo FROM Post WHERE IdPost = inputPost INTO testoPost;
+  CREATE TABLE postComuni (IdPost Post.IdPost%TYPE PRIMARY KEY
+                           numWords INTEGER);
+  LOOP
+    EXIT WHEN keys%NOTFOUND
+    FETCH keys INTO thisKey;
+    IF INSTR(testoPost, thisKey.parola) > 0 THEN
+      keywordsInput := keywordsInput_append(keywordsInput, thisKey.parola);
+      keywordsInputCount := keywordsInputCount+1;
+    ENDIF
+  END LOOP // ora ho un array con tutte le parole contenute nel testo in input
+  LOOP
+    EXIT WHEN curPost%NOTFOUND
+    count = 0;
+    FETCH curPost INTO thisPost; // scorro di post in post
+    FOR i IN 1..keywordsInputCount LOOP
+      IF INSTR(thisPost.Testo, keywordsInput[i]) > 0 THEN
+        count := count+1; // ogni volta che vedo una parola dell'array nel testo del post in esame incremento
+      ENDIF
+    END LOOP
+    INSERT INTO postComuni VALUES (curPost.IdPost, count); //inserisco e passo al post successivo
+  END LOOP
+  FOR risultati IN (SELECT * FROM postComuni ORDER BY numWords DESC LIMIT $1 USING k) LOOP
+    stringa := stringa || 'risultati.IdPost' || ', ';
+  END LOOP
+  DROP TABLE postComuni;
+  CLOSE curPost;
+  CLOSE keys;
+  stringa := rtrim(stringa);
+  stringa := rtrim(stringa, ',');
+  RETURN stringa;
+END;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION keywordsInDOI(IN stringaIn TEXT)
+RETURNS TEXT AS $$
+DECLARE
+   pos INTEGER;
+   thisWord Descrizione.Parola%TYPE;
+   query TEXT := ' INTERSECT
+                  SELECT Doi
+                  FROM Descrizione
+                  WHERE Parola LIKE '
+   stringa TEXT := '';
+BEGIN
+   LOOP
+      pos := INSTR(stringaIn, '+');
+      EXIT WHEN pos <= 0
+      thisWord := SUBSTR(stringaIn, 1, pos-1);
+      stringaIn := LTRIM(stringaIn, thisWord);
+      stringaIn := LTRIM(stringaIn, '+');
+      query := CONCAT(query, thisWord);
+   END LOOP
+   query := RTRIM(query);
+   query := RTRIM(query, 'INTERSECT');
+   OPEN risultati CURSOR FOR query;
+   LOOP
+      EXIT WHEN risultati%NOTFOUND
+      stringa := CONCAT(stringa, risultati.Doi);
+      stringa := CONCAT(stringa, ', ');
+   END LOOP
+   stringa := RTRIM(stringa);
+   stringa := RTRIM(stringa, ',');
+   CLOSE risultati
+   RETURN stringa;
+END;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE allTags(IN albumIn Album.CodA%TYPE, OUT stringaOut TEXT)
+AS $$
+DECLARE
+   albumInEsame Album.CodA%TYPE;
+   i INTEGER := 0;
+   figlioInEsame Album.CodA%TYPE;
+   checkLoop BOOLEAN;
+BEGIN
+   ALTER TABLE TMP ADD COLUMN layer INTEGER;
+   INSERT INTO TMP VALUES (albumIn, i)
+   LOOP
+      checkLoop := NOT EXISTS (SELECT * FROM TMP);
+      EXIT WHEN checkLoop
+      SELECT * INTO albumInEsame FROM TMP ORDER BY layer ASC LIMIT 1 
+      DELETE FROM TMP WHERE CodA = albumInEsame
+      FOR thisWord IN (SELECT parola FROM TagAlbum WHERE CodA = albumInEsame) LOOP
+         IF (INSTR(stringaOut, thisWord)) <= 0 THEN
+            stringaOut := CONCAT(stringaOut, thisWord);
+            stringaOut := CONCAT(stringaOut, ', ');
+         END IF
+      END LOOP
+      OPEN CURSOR figli FOR SELECT CodA FROM Album WHERE InAlbum = albumInEsame AND InAlbum NOT IN (SELECT * FROM TMP)
+      LOOP
+         EXIT WHEN figli%NOTFOUND
+         i := i + 1;
+         FETCH figli.CodA INTO figlioInEsame
+         INSERT INTO TMP VALUES (figlioInEsame, i)
+      END LOOP
+      CLOSE figli
+   END LOOP
+   stringaOut := RTRIM(stringaOut);
+   stringaOut := RTRIM(stringaOut, ',');
+   ALTER TABLE TMP DROP COLUMN layer;
+END;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION pezziEliminati(IN codiciIn)
+RETURNS TEXT AS $$
+DECLARE
+   pos INTEGER;
+   thisWord Descrizione.Parola%TYPE;
+   query TEXT := ' INTERSECT
+                  SELECT Pezzo
+                  FROM Eliminato
+                  WHERE CodP = '
+   stringa TEXT := '';
+BEGIN
+   LOOP
+      pos := INSTR(codiciIn, '@');
+      EXIT WHEN pos <= 0
+      thisWord := SUBSTR(codiciIn, 1, pos-1);
+      codiciIn := LTRIM(codiciIn, thisWord);
+      codiciIn := LTRIM(codiciIn, '@');
+      query := CONCAT(query, thisWord);
+   END LOOP
+   query := RTRIM(query);
+   query := RTRIM(query, 'INTERSECT');
+   OPEN risultati CURSOR FOR query;
+   LOOP
+      EXIT WHEN risultati%NOTFOUND
+      stringa := CONCAT(stringa, risultati.Pezzo);
+      stringa := CONCAT(stringa, ', ');
+   END LOOP
+   stringa := RTRIM(stringa);
+   stringa := RTRIM(stringa, ',');
+   CLOSE risultati
+   RETURN stringa;
+END;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE TRIGGER controlloCopertura
+AFTER INSERT ON CoperturaM
+FOR EACH ROW
+EXECUTE aggiornaCopertura
+
+CREATE OR REPLACE FUNCTION aggiornaCopertura
+RETURNS trigger AS $$
+DECLARE
+   classeAttuale Classe.CodC%TYPE;
+   dataExec TestExec.Data%TYPE;
+BEGIN
+   SELECT CodC INTO classeAttuale FROM Metodo * Classe WHERE CodM = NEW.CodM
+   SELECT Data INTO dataExec FROM TestExec * CoperturaM WHERE CodM = NEW.CodM
+   IF (EXISTS(SELECT 1 FROM CoperturaC WHERE CodC = classeAttuale)) THEN
+      UPDATE TABLE CoperturaC SET Data = dataExec WHERE CodC = classeAttuale
+   ELSE
+      IF (NOT EXISTS(SELECT 1 FROM Metodo M WHERE M.CodM NOT IN (SELECT C.CodM FROM C.CoperturaM) AND M.CodC = classeAttuale)) THEN
+         INSERT INTO CoperturaC VALUES (classeAttuale, dataExec)
+      END IF
+   END IF
+   RETURN NEW;
+END;

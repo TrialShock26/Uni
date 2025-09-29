@@ -1,0 +1,41 @@
+1 - Nome di tutti gli utenti che non hanno mai scaricato lo stesso file completo.
+
+X = SL Completo != NULL (Trasferimento)
+X' = PR IdRich, IdF (X)
+X2 (IdRich2, IdF2) = Trasferimento
+Y = X' JN IdF=IdF2 ^ IdRich!=IdRich2 X2
+Y' = PR IdRich (Y')
+Z = PR IdUtente (Utente) - Y'
+RES = PR NomeUtente (Z * Utente)
+
+2 - CREATE VIEW Download AS (SELECT NomeUtente, EXTRACT (Year FROM DataC) AS Anno, EXTRACT (Mese FROM DataC AS Mese), COUNT(*), SUM(Banda)
+			   FROM Trasferimento JOIN  Utente ON IdRich=IdUtente
+			   WHERE Completo != NULL
+			   GROUP BY NomeUtente, Anno, Mese)
+3.1 - ALTER TABLE Possiede
+    ADD COSTRAINT uniqueFile
+    UNIQUE (IdUtente, IdFile)
+3.2 - ALTER TABLE Trasferimento
+      ADD COSTRAINT completeNullMatch
+      CHECK ((DataC IS NOT NULL AND Completo IS NOT NULL) OR (DataC IS NULL AND Completo IS NULL))
+3.3 - ALTER TABLE Trasferimento
+      ADD COSTRAINT foreignKeyUser
+      FOREIGN KEY IdProp REFERENCES IdUtente(Utente)
+3.4 - Già espresso come chiave primaria
+
+Si scriva in algebra relazionale una espressione che restituisce gli automi che riconoscono lo
+stesso insieme di parole dell’automa di codice XXX.
+
+
+S1 (CodS1, CodA1, In1, Fin1) = Stato (CodS, CodA, Iniziale, Finale)
+S2 (CodS2, CodA2, In2, Fin2) = Stato (CodS, CodA, Iniziale, Finale)
+R0 = S1 X S2
+R1 = Raggiungibile JN CodS1=Start ^ In1=TRUE ^ CodS2=End ^ Fin2=TRUE ^ CodA1=CodA2 ^ CodA1=CodA R0
+X = PR CodA, Parola (R1)
+Y (CodA, Parola1) = SL CodA="XXX" (X)
+YCount (NParole) = F COUNT Parola1 (Y)
+Z = PR CodA (X JN Parola!=Parola1 Y)
+A = (PR CodA (Automa))-Z
+A' = A * R1
+ACount (CodA, NParole) = CodA F COUNT Parola (A')
+Result = PR CodA (Acount * YCount)

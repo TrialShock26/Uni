@@ -1,0 +1,551 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage[italian]{babel}
+\usepackage{float}  % nel preambolo
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+\title{\Huge Documentazione Hackathon \\ \Large Versione 1}
+\author{\LARGE Mario Majorano N86005035\\ \LARGE Luca Sanselmo N86005147}
+
+% Impostazioni margini equilibrati
+\geometry{
+  a4paper,
+  left=2.5cm,
+  right=2.5cm,
+  top=2.5cm,
+  bottom=2.5cm
+}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  
+  % Logo a larghezza intera come specificato
+  \includegraphics[width=\linewidth]{unina-logo.jpg} \\[1.5cm]
+  
+  % Intestazione istituzionale
+  {\Large\textsc{Università degli Studi di Napoli Federico II}} \\[0.3cm]
+  {\large\textsc{Corso di Laurea Triennale in Informatica}} \\[2cm]
+  
+  % Titolo documento
+  {\Huge Documentazione Hackathon} \\[0.5cm]
+  {\LARGE Versione 1} \\[2cm]
+  
+  % Autori e informazioni
+  \begin{tabular}{l@{\hspace{1.5cm}}r}
+    \large Mario Majorano & \large N86005035 \\
+    \large Luca Sanselmo & \large N86005147 \\[1.5cm]
+  \end{tabular}
+  
+  {\large Anno Accademico 2024/2025} \\[1cm]
+  
+  % Linea nera divisoria
+  \rule{\textwidth}{0.4pt}
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Modello di Dominio}
+
+\subsection{Introduzione}
+La presente documentazione ha lo scopo di (1) descrivere l'analisi effettuata per la risoluzione del Modello di Dominio del Problema proposto dal cliente, di (2) portare il lettore alla comprensione delle  scelte implementative adottate per la progettazione concettuale (3) ed infine quello di rappresentare gli elementi concreti descritti dal contesto del mondo reale trattato tramite la definizione di Classi, caratterizzate dai relativi Attributi e Responsabilità.\\
+Tale progettazione concettuale include esclusivamente gli attributi e le responsabilità descritte esplicitamente dal cliente.
+
+\subsection{Requisiti}
+I requisiti sono specificati all'interno della seguente traccia di esercizio:\\ \textit{Un hackathon, ovvero una "maratona di hacking", è un evento durante il quale team di partecipanti si sfidano per progettare e implementare nuove soluzioni basate su una certa tecnologia o mirate a un certo ambito applicativo.\\ 
+Ogni hackathon ha un titolo identificativo, si svolge in una certa sede e in un certo intervallo di tempo (solitamente 2 giorni) e ha un organizzatore specifico (registrato alla piattaforma). L'organizzatore seleziona un gruppo di giudici (selezionati tra gli utenti della piattaforma, invitandoli). Infine, l'organizzatore apre le registrazioni, che si chiuderanno 2 giorni prima dell'evento. Ogni evento avrà un numero massimo di iscritti e una dimensione massima del team.\\
+Durante il periodo di registrazione, gli utenti possono registrarsi per l'Hackathon di loro scelta (eventualmente registrandosi sulla piattaforma se non lo hanno già fatto). Una volta iscritti, gli utenti possono formare team. I team diventano definitivi quando si chiudono le iscrizioni. All'inizio dell'hackathon, i giudici pubblicano una descrizione del problema da affrontare.\\
+Durante l'hackathon, i team lavorano separatamente per risolvere il problema e devono caricare periodicamente gli aggiornamenti sui "progressi" sulla piattaforma come documento, che può essere esaminato e commentato dai giudici. Alla fine dell'hackathon, ogni giudice assegna un voto (da 0 a 10) a ciascun team e la piattaforma, dopo aver acquisito tutti i voti, pubblica le classifiche dei team.}
+\newpage 
+\subsection{Analisi Dei Requisiti}
+\subsubsection{Requisiti Informativi}
+Il sistema prevede la realizzazione di una piattaforma atta all'organizzazione ed alla gestione di una maratona di Hacking in cui
+team di partecipanti collaborano per sviluppare soluzioni innovative in un tempo limitato, solitamente 48 ore. Ogni hackathon è unico e prevede una serie di caratteristiche ben definite che ne regolano l'organizzazione:
+
+\begin{itemize}
+    \item Organizzazione dell' hackathon:\\ 
+    L’hackathon viene creato dalla figura dell'\textbf{Organizzatore}, un utente registrato sulla piattaforma, che ne definisce i dettagli fondamentali: un \textit{titolo} identificativo, la \textit{sede} in cui si svolgerà, \textit{la durata} (tipicamente due giorni), e parametri operativi come il \texit{numero massimo di partecipanti} e la \textit{dimensione massima dei team}. 
+
+    \item Selezione dei Giudici: \\Una volta configurato l’evento, l’\textbf{Organizzatore} seleziona un gruppo di \textbf{giudici} tra gli utenti già presenti nella piattaforma, invitandoli a valutare i progetti presentati dai \textit{partecipanti}.  
+
+    \item Registrazione e formazione dei team:\\ 
+    Le iscrizioni all’\textbf{hackathon} vengono aperte dall’organizzatore e rimangono disponibili fino a 48 ore prima dell’inizio dell’evento, momento in cui i team formati diventano definitivi. In questo periodo, gli utenti possono registrarsi singolarmente o formare team. Se un utente non è ancora registrato sulla piattaforma, può creare un account in fase di iscrizione. 
+
+    \item Svolgimento dell’hackathon\\
+    All’inizio della competizione, i giudici pubblicano la \textit{descrizione del problema} da risolvere, che servirà come base per lo sviluppo dei progetti. Durante l’evento, i team lavorano in modo indipendente ma sono tenuti a caricare periodicamente aggiornamenti sui loro progressi sotto forma di documenti successivamente valutati dai giudici.  
+
+    \item Valutazione e classifica finale\\  
+    Al termine dell'hackathon, ogni giudice assegna un \textit{voto} a ciascun Team in base alla qualità della soluzione proposta. La piattaforma raccoglie automaticamente tutti i voti e pubblica una classifica finale resa disponibile a tutti i partecipanti. 
+\end{itemize}
+\textbf{Vincoli individuati:} \\
+    Per garantire il corretto funzionamento della competizione, il sistema impone le seguenti regole:
+    
+    \begin{itemize}
+        \item I \textbf{giudici} non possono prendere parte alla competizione in qualità di partecipanti
+        \item Gli \textbf{organizzatori} non possono prendere parte alla competizione in qualità di partecipanti  
+        \item Un \textbf{team} può essere formato anche da un solo partecipante
+        \item Un gruppo di \textbf{giudici}, per essere considerato valido, deve essere composto da almeno 2 membri
+        \item Un \textbf{hackathon}, per essere considerato valido, deve prevedere almeno 2 \textbf{team} partecipanti
+        \item Il \textbf{voto} finale $v \in [0, 10]$
+    \end{itemize}
+\[
+\begin{aligned}
+\mathcal{G} &= \{g_1, \dots, g_k\ \} \quad |\mathcal{G}| \geq 2  && \text{(Giudici)} \\
+\mathcal{P} &= \{p_1, \dots, p_m\} && \text{(Partecipanti)} \\
+\mathcal{O} &= \{o_1, \dots, o_n\} \quad |\mathcal{O}| = 1 && \text{(Organizzatore,unico per ogni Hackathon)}  \\
+\mathcal{T} &= \{t_1, \dots, t_z\ \mid |t| \geq 2\} && \text{(Team, almeno 2 partecipanti)} \\
+\mathcal{H} &= \langle \mathcal{P},\mathcal{O}, \mathcal{G}, \mathcal{T}, \text{Problema} \rangle && \text{(Istanza di Hackathon)}
+\end{aligned}
+\]
+
+\newpage
+
+\subsubsection{Requisiti Funzionali}
+Elenco delle funzionalità  e dei rispettivi dati da memorizzare
+\begin{itemize}[leftmargin=*, noitemsep]
+    \item \textbf{Organizzatore:} \hrulefill
+    \begin{itemize}
+        \item \textbf{Creazione hackathon}\begin{itemize}[leftmargin=*]
+            \item[--] Titolo identificativo (univoco)
+            \item[--] Durata
+            \item[--] DataInizio
+            \item[--] DataFine
+            \item[--] Sede 
+            \item[--] Numero massimo partecipanti
+            \item[--] Dimensione massima team
+            \end{itemize}
+        \item \textbf{Selezione giudici} \hrulefill
+        \begin{itemize}[leftmargin=*]
+        \item[--] Assegnazione di un gruppo di Giudici ad uno specifico hackathon
+    \end{itemize}  
+\end{itemize}
+
+    
+    \item \textbf{Partecipante:} \hrulefill
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Registrazione all'Hackathon}
+    \begin{itemize}[leftmargin=*]
+    \end{itemize}
+        \item \textbf{Creazione e/o Partecipazione ad un Team}
+        \begin{itemize}
+            \item[--] Nome del team
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Team:} \hrulefill
+        \begin{itemize}
+            \item \textbf{Pubblicazione Documento}
+            \item[--] Contenuto testuale dei progressi del Team
+        \end{itemize}
+    
+    \item \textbf{Giudici:} \hrulefill
+    \begin{itemize}[leftmargin=*]
+        \item \textbf{Sistema di valutazione}
+            \begin{itemize}[leftmargin=*]
+                \item[--] Commenti testuali ai Documenti pubblicati dai Partecipanti
+            \end{itemize}
+        \item \textbf{Pubblicazione del problema}
+            \begin{itemize}[leftmargin=*]
+                \item[--] Descrizione del problema
+            \end{itemize}
+    
+\end{itemize}
+
+\newpage
+
+\section{Classi,Associazioni e Gerarchie}
+Tali oggetti del mondo reale appena descritti sono stati rappresentati tramite l'individuazione e la sucessiva definizione di: 
+\begin{itemize}
+    \item Classi con relativi Attributi e Responsabilità
+    \item Gerarchie tra Classi
+    \item Associazioni tra Classi
+\end{itemize}
+
+\subsection{Classi, Attributi e/o Responsabilità}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2ex]
+    \item \textbf{Utente} \hrulefill
+    \begin{itemize}[leftmargin=*, noitemsep, topsep=1ex]
+        \item \textbf{Partecipante}
+        \begin{itemize}[leftmargin=*]
+            \item[--] SingUpHackathon
+            \item[--] createTeam
+            \item[--] joinTeam
+        \end{itemize}
+        
+        \item \textbf{Giudice}
+        \begin{itemize}[leftmargin=*]
+            \item[--] publishProblem
+            \item[--] commentProgress
+            \item[--] gradeTeam
+        \end{itemize}
+        
+        \item \textbf{Organizzatore}
+        \begin{itemize}[leftmargin=*]
+            \item[--] inviteJudge
+            \item[--] openHackathon
+        \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Team} \hrulefill
+    \begin{itemize}[leftmargin=*]
+        \item[--] publishProgress
+    \end{itemize}
+    
+    \item \textbf{Documento} \hrulefill
+    \begin{itemize}[leftmargin=*]
+        \item[--] Titolo
+        \item[--] Contenuto
+        \item[--] Commento
+    \end{itemize}
+    
+    \item \textbf{Hackathon} \hrulefill
+    \begin{itemize}[leftmargin=*]
+        \item[--] Titolo
+        \item[--] Sede
+        \item[--] Durata
+        \item[--] DataInizio
+        \item[--] DataFine
+        \item[--] PeriodoIscrizioni
+        \item[--] DataAperturaIscrizioni
+        \item[--] DataChiusuraIscrizioni
+        \item[--] MaxIscritti
+        \item[--] MaxDimTeam
+        \item[--] DescrizioneProblema
+    \end{itemize}
+
+    \item \textbf{Votazione} \hrulefill
+        \begin{itemize}
+            \item[--] Voto
+        \end{itemize}
+
+    \item \textbf{Registrazione} \hrulefill
+    
+\end{itemize}  
+
+\newpage
+
+\subsection{Gerarchie tra Classi}
+Durante la progettazione concettuale è trasparsa la necessità di descrivere una specializzazione della Classe Utente, attraverso tre sottoclassi: Organizzatore, Giudice e Partecipante.
+
+\begin{center}
+\begin{tikzpicture}[
+    level distance=1.5cm,
+    sibling distance=2.5cm,
+    every node/.style={draw, fill=white, align=center, minimum width=2cm}
+]
+\node {Utente}
+    child {node {Organizzatore}}
+    child {node {Giudice}}
+    child {node {Partecipante}};
+\end{tikzpicture}
+\end{center}\textbf{}
+
+La Gerarchia individuata possiede i seguenti vincoli:
+\begin{itemize}
+    \item \textbf{Vincolo di Disgiunzione}:
+    Un'istanza può essere membro di al più di una sottoclasse   
+    \item \textbf{Vincolo di Completezza Parziale}:
+    Ogni istanza nella superclasse NON DEVE obbligatoriamente essere membro di qualche sottoclasse nella specializzazione
+\end{itemize}
+
+
+Tali vincoli garantiscono il corretto funzionamento del sistema garantendo tutto ciò descritto nell'analisi requisiti precedente :
+
+\begin{itemize}[leftmargin=*]
+    \item Un utente è considerato \emph{Partecipante} solamente se completa la registrazione ad un hackathon. Gli utenti generici non hanno automaticamente questo status.
+    
+    \item I Giudici hanno un ruolo esclusivo: possono valutare i progetti ma non possono iscriversi come partecipanti agli hackathon che giudicano.
+    
+    \item Analogamente, gli Organizzatori hanno accesso solo alle funzioni di gestione dell'evento e non possono partecipare alla competizione.
+\end{itemize}
+
+\subsection{Associazioni tra Classi - Note}
+Per rendere il sistema il più possibile aderente al contesto del mondo reale descritto, le associazioni
+\begin{itemize}
+    \item \textbf{Partecipazione} (verso la classe \texttt{Team}),
+    \item \textbf{Competizione} (verso la classe \texttt{Hackathon}),
+    \item \textbf{Organizzazione} (verso la classe \texttt{Hackathon}).
+\end{itemize}
+sono state progettate per consentire una gestione dello \textbf{storico degli eventi e delle interazioni tra le entità del sistema}.  
+Nel contesto di una piattaforma per la gestione e la memorizzazione di molteplici hackathon, è stato ritenuto di notevole importanza mantenere uno storico che consenta di tracciare in modo completo e coerente il ciclo di vita di ogni oggetto. Tale approccio aggiunge alla piattaforma: 
+\begin{itemize}
+    \item una \textbf{tracciabilità temporale} delle attività
+    \item la possibilità di effettuare \textbf{analisi retrospettive} e di generare report dettagliati.
+    \item \textbf{scalabilità}: prepara il sistema a possibili \textbf{evoluzioni future}
+\end{itemize}  
+Quindi, dal punto di vista pratico sarà possibile ottenere:
+\begin{itemize}
+    \item per ogni Partecipante: a quali Team ha partecipato 
+    \item per ogni Team: a quali  Hackathon ha partecipato
+    \item per ogni Organizzatore: quali Hackathon ha organizzato
+\end{itemize}
+
+Tutto ciò appena esposto ha l'obiettivo di garantire \textbf{coerenza}, \textbf{completezza} e \textbf{scalabilità} alla progettazione del sistema.
+
+\newpage
+
+\subsubsection{Classi Associative}
+Le due classi associative individuate nel Class Diagram - \textit{Registrazione} e \textit{Votazione} - identificano una particolare occorrenza di associazione tra classi, è quindi affiorata la necessità di introdurre questo costrutto. In particolare:
+\begin{itemize}
+    \item Per \textit{Registrazione} si è esplicitata l'importanza della corretta connessione tra \textit{Hackathon} e \textit{Partecipante}, mirata a sottolineare che una istanza di Registrazione fa riferimento ad un singolo \textit{Hackathon} e \textit{Partecipante}, individuando così la coppia correttamente e rappresentando l'oggetto del mondo reale - la registrazione - effettuata da un utente.
+    \item Per \textit{Votazione}, la classe associativa presenta l'attributo \textit{Voto}, riferito sia al \textit{Team} ricevente che al corrispettivo \textit{Giudice} che lo emette; questo permette quindi di individuare la coppia e contemporaneamente conservare il valore della votazione.
+\end{itemize}
+
+\section{Dizionari}
+
+\subsection{Dizionario delle Classi}
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.8} % Aumenta lo spazio verticale in tutte le celle
+\setlength{\tabcolsep}{12pt} % Aumenta lo spazio orizzontale in tutte le celle
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}m{6cm}|>{\centering\arraybackslash}m{4.5cm}|}
+\hline
+\textbf{Classe} & \textbf{Descrizione} & \centering\textbf{Attributi} & \textbf{Responsabilità} \\ 
+\hline
+
+\centering\vspace{0.5ex}Utente & 
+\centering Classe base per tutti gli utenti del sistema & 
+& \\ 
+\hline
+
+\centering\vspace{0.5ex}Partecipante & 
+\centering Utente registrato come partecipante & 
+& 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{singUpHackathon()}
+\item \texttt{createTeam()}
+\item \texttt{joinTeam()}
+\end{itemize}\vspace{0.5ex} \\ 
+\hline
+
+\centering\vspace{0.5ex}Giudice & 
+\centering Utente abilitato alla valutazione & 
+& 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{publishProblem()}
+\item \texttt{commentProblem()}
+\item \texttt{gradeTeam()}
+\end{itemize}\vspace{0.5ex} \\ 
+\hline
+
+\centering\vspace{0.5ex}Organizzatore & 
+\centering Utente che gestisce gli eventi & 
+& 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{inviteJudge()}
+\item \texttt{openHackathon()}
+\end{itemize}\vspace{0.5ex} \\ 
+\hline
+
+\centering\vspace{0.5ex}Team & 
+\centering Gruppo di partecipanti & 
+& 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{publishProgress()}
+\end{itemize}\vspace{0.5ex} \\ 
+\hline
+
+\centering\vspace{0.5ex}Documento & 
+\centering File prodotto durante l'hackathon & 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{Titolo} 
+\item \texttt{Contenuto} 
+\item \texttt{Commento} 
+\end{itemize}\vspace{0.5ex} & 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{Registrare lo stato di avanzamento}
+\end{itemize}\vspace{0.5ex} \\ 
+\hline
+
+\centering\vspace{0.5ex}Hackathon & 
+\centering Competizione di programmazione & 
+\vspace{0.5ex}\begin{itemize}[leftmargin=*,noitemsep,topsep=5pt,parsep=0pt,partopsep=0pt]
+\item \texttt{Titolo} 
+\item \texttt{Sede} 
+\item \texttt{Durata} 
+\item \texttt{DataInizio} 
+\item \texttt{DataFine} 
+\item \texttt{PeriodoIscrizioni}
+\item \texttt{DataAperturaIscrizioni}
+\item \texttt{DataChiusuraIscrizioni} 
+\item \texttt{MaxPartecipanti} 
+\item \texttt{DimMaxTeam} 
+\item \texttt{DescrizioneProblema} 
+\end{itemize}\vspace{0.5ex} & \\ 
+\hline
+\end{tabular}
+}
+\caption{Descrizione delle classi del sistema - Sono stati indicati unicamente gli attributi e le responsabilità indicate esplicitamente nel Dominio del Problema}
+\label{tab:classi-complete}
+\end{table}
+
+\newpage
+
+\subsection{Dizionario delle Associazioni}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{8cm}|}
+\hline
+\textbf{Associazione} & \textbf{Tipologia} & \textbf{Descrizione} \\ \hline
+
+Competizione & Molti-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un team Compete in un 1 o più Hackathon
+\vspace{3pt}
+\item In 1 Hackathon competono 2 o più Team
+\end{itemize} \\ \hline
+
+Pubblicazione & Uno-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un Team pubblica nessuno o più Documenti
+\vspace{3pt}
+\item Un documento è pubblicato da 1 ed un solo Team
+\end{itemize} \\ \hline
+
+Esaminazione & Molti-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un Giudice esamina nessuno o più documenti
+\vspace{3pt}
+\item Un Documento è esaminato da 2 o più Giudici
+\end{itemize} \\ \hline
+
+Organizzazione & Uno-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un organizzatore organizza 1 o più Hackathon
+\vspace{3pt}
+\item Un Hackathon è organizzato da 1 Organizzatore
+\end{itemize} \\ \hline
+
+Selezione & Uno-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un organizzatore seleziona 2 o più Giudici 
+\vspace{3pt}
+\item Un Giudice è selezionato da uno ed un solo Organizzatore
+\end{itemize} \\ \hline
+
+Partecipazione & Molti-a-Molti & 
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,noitemsep,topsep=3pt,partopsep=0pt]
+\item Un partecipante partecipa ad 1 o più Team
+\vspace{3pt}
+\item Un Team possiede 1 o più Partecipanti
+\end{itemize} \\ \hline
+\end{tabular}
+\caption{Descrizione delle associazioni tra classi del sistema}
+\label{tab:associazioni}
+\end{table}
+
+\subsubsection{Dizionario Classi Associative}
+
+\begin{table}[h]
+\centering
+\resizebox{0.65\textwidth}{!}{
+\begin{tabular}{|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{1.5cm}|>{\centering\arraybackslash}m{4.5cm}|}
+\hline
+\textbf{Classe} & \textbf{Attributi} & \textbf{Descrizione} \\ \hline
+
+Registrazione & – & Azione con cui un utente partecipa a un hackathon \\ \hline
+
+Votazione & Voto & Valutazione data da un giudice a un team \\ \hline
+\end{tabular}
+}
+\caption{Classi associative e relativi attributi}
+\label{tab:classi-ridotte}
+\end{table}
+
+
+\newpage
+
+\section{Class Diagram}
+\label{sec:classDiagram}
+Dall'analisi dei requisiti realizzata precedentemente, è stato ideato il seguente Class Diagram.
+Tale diagramma rappresenta il frutto della progettazione concettuale e descrive graficamente tramite lo standard UML le classi, le associazioni e le gerarchie succitate. 
+\vspace{13em}  % Spazio verticale dopo il titolo della sezione
+\begin{figure}[H]
+    \hspace*{-17mm}  % Sposta l'immagine a sinistra
+    \includegraphics[width=1.20\linewidth]{HackathonDEFINITIVOv1Upscaled.jpg}
+    \label{fig:enter-label}
+\caption{Diagramma delle Classi in UML}
+\end{figure}
+
+\newpage
+
+\section{Implementazione - Packages}
+
+\textit{Nelle prossime versioni di "Hackathon", questa sezione avrà il ruolo di descrivere i package utilizzati nell'implementazione della piattaforma in linguaggio Java. Al momento è composta unicamente dal package "Model" in quanto nella parte di progetto richiesta sono assenti gli altri elementi che permetteranno di costruire lo schema completo (come la base di dati).}
+
+\subsection{Model}
+Di seguito la rappresentazione del Package Model derivante dall'implementazione in linguaggio Java del Class Diagram (\ref{sec:classDiagram}) individauto illustrato precedentemente.
+
+
+\vspace{5em}  % Spazio verticale dopo il titolo della sezione
+\begin{figure}[H]
+    \hspace*{-17mm}  % Sposta l'immagine a sinistra
+    \includegraphics[width=1.20\linewidth]{HackathonPackageModelv1Upscaled.jpg}
+    \label{fig:enter-label}
+\caption{Package Model}
+\end{figure}
+\newpage
+
+\subsection{Note}
+È importante sottolineare che questa implementazione è frutto di un Class Diagram non formalmente ristrutturato, quindi potrebbe essere soggetta a modifiche strutturali sostanziali per una migliore risoluzione del problema posto. In particolare sono evidenziate, qui e come commenti al codice, le seguenti possibili implementazioni:
+\begin{itemize}
+    \item Partecipante
+    \begin{itemize}
+        \item[--] Potrebbe essere inserita una lista di Hackathon a cui il giocatore prende parte. Nonostante possa risultare un dato ridondante potrebbe tornare utile a fronte di una richiesta frequente di questa informazione.
+    \end{itemize}
+    \item Hackathon
+    \begin{itemize}
+        \item[--] L'attributo \textit{DataChiusuraIscrizioni} potrebbe essere derivabile da \textit{DataInizio} sottraendovi 2 giorni. Questo però includerebbe un vincolo forte su queste date impedendo, per esempio, di sincronizzare la data di inizio Hackathon e la data di chiusura iscrizioni dello stesso.
+        \item[--] È possibile separare la creazione dell'hackathon dall'apertura delle sue registrazioni. Questo sembra essere interessante in ottica di creazione di un torneo, ma potrebbe produrre hackathon mai iniziati. Da gestire correttamente per evitare memory leak.
+    \end{itemize}
+    \item Registrazione
+    \begin{itemize}
+        \item[--] Il campo \textit{Data} potrebbe essere introdotto per memorizzare la data di registrazione all'hackathon di riferimento; utile in caso di frequente richiesta di questo dato o a seguito di un ulteriore colloquio con il cliente.
+    \end{itemize}
+\end{itemize}
+In conclusione, alcune delle associazioni e/o classi associative possono essere implementate in diverso modo, ma al momento è sembrato opportuno procedere con questo tipo di approccio.
+
+\section{Repository GitHub}
+
+Il codice sorgente del progetto è pubblicamente disponibile su GitHub al seguente link:
+
+\vspace{0.5em}
+\begin{center}
+\href{https://github.com/TrialShock26/Hackathon}{\texttt{github.com/TrialShock26/Hackathon}}
+\end{center}
+\vspace{0.5em}
+
+La repository contiene:
+\begin{itemize}
+    \item l'intero codice sorgente sviluppato
+    \item la presente documentazione
+\end{itemize}
+
+
+
+\end{document}
