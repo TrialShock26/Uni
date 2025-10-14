@@ -1,0 +1,19 @@
+1 - File con permesso di esecuzione per il proprietario
+ls -l | grep '^...x'
+
+2 - Directory con iniziale maiuscola
+ls -l | grep '^d' | grep '\<[[:upper:]]'
+ls -l -d */ | grep "\<[[:upper:]]"
+
+3 - File con permessi wx per il tuo gruppo
+ls -l | grep "^.....w\|^......x"
+
+4 - Utenti che usano bash
+grep "bash$" /etc/passwd
+
+5 - Terzultimo file diverso da "pluto.txt"
+ls -l | grep -v 'pluto.txt' | tail -3 | head -1
+
+6 - Nella pwd e quelle inferiori elenca tutti i .txt
+ls -R | grep '.*\.txt'
+find . -name "*.txt"

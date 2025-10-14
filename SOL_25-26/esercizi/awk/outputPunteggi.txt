@@ -1,0 +1,9 @@
+90,00 lso01InfoNa34
+86,00 lso01InfoNa78
+69,00 lso01InfoNa03
+68,00 lso01InfoNa20
+64,00 lso01InfoNa93
+40,00 lso01InfoNa98
+34,00 lso01InfoNa39
+20,00 lso01InfoNa01
+10,00 lso01InfoNa43

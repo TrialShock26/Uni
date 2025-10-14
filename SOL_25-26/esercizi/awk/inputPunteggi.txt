@@ -1,0 +1,9 @@
+lso01InfoNa03;69,00
+lso01InfoNa34;90,00
+lso01InfoNa43;10,00
+lso01InfoNa39;34,00
+lso01InfoNa20;68,00
+lso01InfoNa98;40,00
+lso01InfoNa01;20,00
+lso01InfoNa78;86,00
+lso01InfoNa93;64,00

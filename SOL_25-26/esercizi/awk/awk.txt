@@ -1,0 +1,36 @@
+1 - Riordina e calcola punteggi
+awk -f calcolaPunteggi.awk inputPunteggi.txt | sort -nr > outputPunteggi.txt
+
+2 - Utenti che usano bash
+cat /etc/passwd | awk -f utentiBash.awk
+
+3 - Stampa pid e utente dei processi con CPU > 0.1
+ps aux | awk -f utilizzoCPU.awk
+
+4 - Tutti i pid e ppid dell'user attuale con totale
+ps -o pid=,ppid= -u $USER | awk -f totaleProcessi.awk
+
+5 - Terza colonna delle righe che iniziano e finiscono per la prima lettera della prima colonna, solo seconda colonna
+awk -f colonne.awk testColonne.txt
+
+6 - Processi che consumano più di una soglia
+soglia=10 | ps -eo user,pid,pcpu,comm --no-headers | awk -v soglia="$soglia" '$3 > soglia {print $1, $2, $3}'
+
+7 - Dimensione totale file txt
+ls -l | awk '/.txt$/ {tot+=$5} END {print "Totale occupato =", tot}'
+ls -lsh | awk '/.txt$/ {tot+=$1} END {print "Totale occupato =", tot "K"}'
+
+8 - Righe dispari
+awk 'NR % 2 == 1'
+
+9 - Numero di righe con una x
+awk '/x/ {count++} END {print count}'
+
+10 - File più grande
+ls -l | awk -f fileGrande.awk
+
+11 - Conversione HTML dei file
+ls | awk -f convertiHTML.awk
+
+12 - Quante volte appara un utente nei processi
+ps -eo user --no-headers | awk -f processiXUtente.awk

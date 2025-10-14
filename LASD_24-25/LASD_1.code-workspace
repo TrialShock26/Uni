@@ -1,0 +1,79 @@
+{
+	"folders": [
+		{
+			"name": "secondaConsegna",
+			"path": "secondaConsegna"
+		},
+		{
+			"name": "exercise2",
+			"path": "mogaveroTraccia_1/exercise2"
+		},
+		{
+			"name": "template2",
+			"path": "traccia_2/template2"
+		},
+		{
+			"name": "exercise1",
+			"path": "mogaveroTraccia_1/exercise1"
+		},
+		{
+			"name": "Template1",
+			"path": "traccia_1/Template1"
+		},
+		{
+			"name": "primaConsegna",
+			"path": "primaConsegna"
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"files.associations": {
+			"array": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp",
+			"atomic": "cpp",
+			"bit": "cpp",
+			"cctype": "cpp",
+			"clocale": "cpp",
+			"cmath": "cpp",
+			"compare": "cpp",
+			"concepts": "cpp",
+			"cstdarg": "cpp",
+			"cstddef": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"cwchar": "cpp",
+			"cwctype": "cpp",
+			"deque": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"exception": "cpp",
+			"algorithm": "cpp",
+			"functional": "cpp",
+			"iterator": "cpp",
+			"memory": "cpp",
+			"memory_resource": "cpp",
+			"numeric": "cpp",
+			"optional": "cpp",
+			"random": "cpp",
+			"system_error": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp",
+			"iosfwd": "cpp",
+			"iostream": "cpp",
+			"istream": "cpp",
+			"limits": "cpp",
+			"new": "cpp",
+			"numbers": "cpp",
+			"ostream": "cpp",
+			"stdexcept": "cpp",
+			"streambuf": "cpp",
+			"typeinfo": "cpp",
+			"list": "cpp",
+			"set": "cpp"
+		}
+	}
+}
