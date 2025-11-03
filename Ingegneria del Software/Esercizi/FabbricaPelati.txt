@@ -1,0 +1,20 @@
+1. La presenza di parametri di tipo MateriaPrima e Ordine negli attributi di cache, rappresenta una prima forma di alto accoppiamento tra classi, rendendo dipendente GestoreFabbricaPelati da queste due; in più è presente un parametro di tipo MateriaPrima in un metodo e una variabile locale di tipo Ordine in altri due metodi incrementa ancora di più l'accoppiamento. In aggiunta, l'intera classe non rispetta il Single Responsibility Principle, in quanto si occupa di connettersi al DB, gestire le materie prime, le produzioni, gli ordini e anche le comunicazioni verso l'esterno.
+
+2. Spostare la connessione al database esplicita in una classe dedicata. Smantellare la classe in diverse classi per garantire il SRP.
+
+classe GestoreMagazzino per la gestione delle materie prime -> riceve il metodo aggiungiMateriaPrima, idealmente cambiando anche i parametri per disaccoppiare ulteriormente questa classe da MateriaPrima
+
+classe GestoreProduzioni per gestire la pipeline di produzione dei pelati -> riceve il metodo avviaProduzione, nel quale indichiamo i parametri grezzi dell'ordine, idealmente effettuandone un parsing, per dar via alla catena di produzione
+
+classe GestoreComunicazioni per gestire tutte le comunicazioni esterne -> riceve il metodo inviaOrdine e inviaEmailDistributore per comunicare con le altre aziende, può rimanere accoppiata alla classe Ordine in quanto sono concetti legati strettamente, è anche possibile introdurre i dati grezzi di un ordine come parametro di inviaOrdine
+
+ognuna di queste classi può conservare una propria cache mappata con un Integer che può fungere da identificatore comune
+
+
+
+GestoreMagazzino: organizzare la memorizzazione e cancellazione delle materie prime conservate in fabbrica, la loro persistenza e il loro spostamento
+	aggiungiMateriaPrima(int id, String nome, int quantita): si occupa di memorizzare la materia prima nel magazzino
+
+Classe: responsabilità
+	Metodo: responsabilità
+	Note: questo riduce accoppiamento, alza coesione, ho fatto così perché
