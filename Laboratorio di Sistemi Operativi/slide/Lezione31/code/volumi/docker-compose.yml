@@ -1,0 +1,26 @@
+services:
+  # SERVIZIO A: Crea il file
+  creatore:
+    image: alpine
+    container_name: volume_creatore
+    volumes:
+      # Nuovo nome: 'persistenza_test' collegato alla cartella /data
+      - dati_persistenti:/data
+    # Comando: Crea un file chiamato 'test.txt' e scrive l'ora attuale al suo interno
+    command: ["sh", "-c", "echo 'Creato il file' > /data/test.txt && echo 'File creato! Esco'"]
+
+  # SERVIZIO B: Legge il file (da lanciare separatamente)
+  lettore:
+    image: alpine
+    container_name: volume_lettore
+    volumes:
+      # Usa lo stesso nome 'persistenza_test' per accedere ai dati
+      - dati_persistenti:/data
+    # Comando: Legge il contenuto del file 'test.txt'
+    command: cat /data/test.txt
+
+# DICHIARAZIONE DEL VOLUME NOMINATO
+volumes:
+  # Dichiarazione: usiamo il nome 'dati_persistenti'
+  dati_persistenti:
+    driver: local

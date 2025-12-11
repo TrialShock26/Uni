@@ -1,0 +1,19 @@
+services:
+  server:
+    build: ./server
+    container_name: server-cont
+    networks:
+      - miarete
+
+  client:
+    build: ./client
+    container_name: client-cont
+    networks:
+      - miarete
+    depends_on:
+      - server
+    # Questo è l'ARGOMENTO passato all'ENTRYPOINT
+    command: ["server-cont"]
+
+networks:
+  miarete:
