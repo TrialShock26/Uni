@@ -1,0 +1,40 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.1.1 Chrome/132.0.6834.210 Electron/34.3.3 Safari/537.36" version="26.1.1">
+  <diagram name="Pagina-1" id="bdEshms6hEqHoIcEKwC8">
+    <mxGraphModel dx="713" dy="352" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bSa8kXbenbGmfQI06zgu-1" value="SensorePressione" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="189" y="210" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-2" value="«abstract»&lt;br&gt;&lt;b&gt;FonteDati&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="189" y="70" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-3" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="bSa8kXbenbGmfQI06zgu-1" target="bSa8kXbenbGmfQI06zgu-2">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="499" y="280" as="sourcePoint" />
+            <mxPoint x="659" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-4" value="«interface»&lt;br&gt;&lt;b&gt;Monitor&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="529" y="70" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-5" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;" edge="1" parent="1" source="bSa8kXbenbGmfQI06zgu-4" target="bSa8kXbenbGmfQI06zgu-2">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="499" y="200" as="sourcePoint" />
+            <mxPoint x="659" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-6" value="DisplayDigitale" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="529" y="210" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bSa8kXbenbGmfQI06zgu-7" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" edge="1" parent="1" source="bSa8kXbenbGmfQI06zgu-6" target="bSa8kXbenbGmfQI06zgu-4">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="839" y="280" as="sourcePoint" />
+            <mxPoint x="584" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

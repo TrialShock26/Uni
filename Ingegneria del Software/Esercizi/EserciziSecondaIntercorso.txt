@@ -1,0 +1,117 @@
+===== Esercizio 1.a =====
+Un primo code smell individuato è quello caratterizzato dal data clump nei parametri del metodo, che individuano un biglietto. Questo è
+svantaggioso perché le n-uple di dati che individuano un biglietto devono essere trasportate sempre insieme, riducendo la chiarezza del
+codice e la sua propensione al riutilizzo.
+Successivamente individuiamo un errore nel modo in cui il metodo prepara le informazioni da stampare, tramite calcoli matematici e
+controlli per gli sconti. Questo evidenzia il fatto che il metodo non si occupa solo di stampare, ma fa anche altro che non è ben chiaro,
+diminuendo la comprensione e coerenza interna della funzione.
+Il terzo code smell individuato è sulla creazione dell'effettivo testo da stampare, in quanto il testo prodotto è formattato manualmente,
+il che porta svantaggi sull'eventuale riutilizzo del codice, abbassando la modularità del metodo.
+
+===== Esercizio 1.b =====
+Primo code smell: extract class per contenere il data clump e favorire riutilizzo, potenzialmente facendo uso di un interfaccia generale
+per un biglietto generico.
+Secondo code smell: extract method per raccogliere tutte le operazioni che calcolano i parametri del biglietto, delegando al nuovo metodo
+il compito di rilevare il tipo di biglietto e calcolarne il relativo prezzo e sconto
+(se non già fatto dalla classe stessa creata in precedenza).
+Terzo code smell: extract method per far si che la stampa non sia fortemente accoppiata al tipo di testo che possiamo stampare. Idealmente
+potremmo costruire un metodo per ciascun tipo di stampa e delegare la formattazione a un metodo esterno, per far si che la funzione print
+sia riutilizzabile a prescindere dal tipo di formattazione disponibile e supportata.
+
+===== Esercizio 1.c =====
+public class Ticket {
+    String eventCode;
+    int seats;
+    String typeText;
+
+    public Ticket (String eventCode, int seats, String typeText) {
+        // inizializzazione
+        typeText = richText; // esempio
+    }
+}
+public class TicketPrinter {
+    private String evaluateType (Ticket t) {
+        if (t.getSeats() >= 10) {
+            return "group";
+        } else {
+            if (t.getSeats() >= 4) {
+                return "family";
+            } else {
+                return "single";
+            }
+        }
+    }
+
+    private double evaluatePrice(Ticket t) {
+        return t.getSeats() * 20;
+    }
+
+    private double evaluateDiscount (String type, double price) {
+        if (type.equals("family")) {
+            return price * 0.10;
+        }
+        
+        if (type.equals("group")) {
+            return price * 0.30;
+        }
+
+        return 0.0;
+    }
+
+    private String printRichText(ticketToPrint, type, price, discount) {
+        String output = "<u>Event</u>:" + ticketToPrint.getEventCode() +
+                " <u>Seats</u>:" + ticketToPrint.getSeats() +
+                " <u>Type</u>:" + type +
+                " <u>Price</u>:" + price +
+                " <u>Discount</u>:" + discount;
+        return output;
+    }
+
+    public String print(Ticket ticketToPrint) {        
+        String output;
+        String type;
+        double price;
+        double discount;
+
+        type = evaluateType(ticketToPrint);
+        price = evaluatePrice(ticketToPrint);
+        discount = evaluateDiscount(type);
+
+        if (!ticketToPrint.getTypeText().equals("richText")) {
+            output = "Event:" + ticketToPrint.getEventCode() +
+                    " Seats:" + ticketToPrint.getSeats() +
+                    " Type:" + type +
+                    " Price:" + price +
+                    " Discount:" + discount;
+        } else {
+            output = printRichText(ticketToPrint, type, price, discount);
+        }
+        return output;
+    }
+}
+===== Esercizio 2 =====
+I principali parametri definiti dagli standard per valutare i modelli di processo software sono:
+1. comprensibilità: quanto è facile capire e padroneggiare il modello
+2. visibilità: quanto è chiaro capire in che fase dello sviluppo ci troviamo
+3. supportabilità: quanti strumenti sono disponibili a supporto della metodologia
+4. accettabilità: quanto il modello è propenso ad essere approvato e concordato dalle persone che ne fanno uso
+5. robustezza: quanto il modello resiste al cambiamento del software in corso d'opera
+6. affidabilità: quanto il modello aiuta nell'individuazione degli errori e nella correzione di essi
+7. manutenibilità: quanto il modello si plasma alle variazioni nell'organizzazione
+8. rapidità: quanto il modello velocizza lo sviluppo software
+
+Nel modello SCRUM Agile, le seguenti proprietà sono valutate per determinare la sua efficienza
+1. Sicuramente non eccelle in ciò, ma comunque con un po' di pratica ne si diventa padroni, ricoprendo i vari ruoli previsti
+2. Primo punto di forza, in quanto ogni deliverable prodotto identifica una fotografia del processo software in corso, ideale per
+    valutarne lo stato
+3. Molti strumenti facilitano l'applicazione dei processi SCRUM, memorizzando i backlog e organizzando le varie cerimonie
+4. Il modello favorisce la coesione interna del team e migliora la collaborazione tra peers, rendendosi forte nell'esprimere il consenso
+    dei membri
+5. Essendo strutturato con le Iterazioni, il modello è perfetto per accogliere cambiamenti repentini tra uno sprint e l'altro
+6. I costanti meeting con il cliente e la presentazione di demo favorisce una rapida individuazione degli errori
+7. Non sono presenti compiti assegnati e rigorosità nel modello, permettendo all'organizzazione di essere liberamente flessibile
+8. A fronte di pochi cambiamenti che rallentano lo sviluppo, il modello si comporta bene su questo aspetto
+
+===== Esercizio 3.1 =====
+I design pattern individuati sono:
+Observer e Singleton
