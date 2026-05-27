@@ -18,6 +18,7 @@ public void resetV2(Object x) throws IllegalAccessException { //azzera solo i ca
 
 public Class<?> generalSuperclass(Object x) {
     Class<?> class1 = x.getClass();
+    if (class1 == Object.class) return null; //oppure throws
     while (! (class1.getSuperclass().equals(Object.class)) ) {
         class1 = class1.getSuperclass();
     }
