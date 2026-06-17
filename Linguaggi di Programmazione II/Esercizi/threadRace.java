@@ -1,13 +1,13 @@
 public static int threadRaceV1(Runnable r1, Runnable r2) {
     AtomicInteger winner = new AtomicInteger();
+
     Thread t1 = new Thread() {
         @Override
         public void run() {
             r1.run();
             synchronized (winner) {
                 if (winner.get() == 0) {
-                    winner.incrementAndGet();
-                    winner.notifyAll();
+                    winner.setPlain(1);
                 }
             }
         }
@@ -18,9 +18,7 @@ public static int threadRaceV1(Runnable r1, Runnable r2) {
             r2.run();
             synchronized (winner) {
                 if (winner.get() == 0) {
-                    winner.incrementAndGet();
-                    winner.incrementAndGet();
-                    winner.notifyAll();
+                    winner.setPlain(2);
                 }
             }
         }
@@ -38,34 +36,31 @@ public static int threadRaceV1(Runnable r1, Runnable r2) {
 
 public static int threadRaceV2(Runnable r1, Runnable r2) {
     AtomicInteger winner = new AtomicInteger();
-    Thread t1 = new Thread() {
+    
+    new Thread() {
         @Override
         public void run() {
             r1.run();
             synchronized (winner) {
                 if (winner.get() == 0) {
-                    winner.incrementAndGet();
+                    winner.setPlain(1);
                     winner.notifyAll();
                 }
             }
         }
-    };
-    Thread t2 = new Thread() {
+    }.start();
+    new Thread() {
         @Override
         public void run() {
             r2.run();
             synchronized (winner) {
                 if (winner.get() == 0) {
-                    winner.incrementAndGet();
-                    winner.incrementAndGet();
+                    winner.setPlain(2);
                     winner.notifyAll();
                 }
             }
         }
-    };
-
-    t1.start();
-    t2.start();
+    }.start();
 
     synchronized (winner) {
         while (winner.get() == 0) {
